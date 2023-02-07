@@ -14,3 +14,4 @@ jobs:
     runs-on: windows-latest
     steps:
       - run: start-sleep -seconds 150
+      - run: echo "hello"
