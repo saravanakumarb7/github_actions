@@ -1,0 +1,16 @@
+# concurrency key, at both the workflow and job level, ensures that only a single run or job is in progress.
+# If you have a deployment to your production environment ensuring that only a single deployment is happening at any given time and that you are always deploying the latest code can be important.
+# The concurrency key can be any string or an expression using the github context.
+# reference: https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#concurrency
+# https://github.blog/changelog/2021-04-19-github-actions-limit-workflow-run-or-job-concurrency/
+
+name: Concurrency
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+on: [workflow_dispatch]
+jobs:
+  run-shell-command:
+    runs-on: windows-latest
+    steps:
+      - run: start-sleep -seconds 150
