@@ -1,0 +1,71 @@
+# Reference https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#using-a-specific-shell
+name: Using Different Shells
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+# push:
+#  branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a job called "run-shell-command"
+  run-shell-command:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # echo a string
+      - run: echo "Hello World"
+
+      # Multiline script
+      ## showing node js and npm pre-installed versions
+      - name: Multiline script
+        run: |
+          node -v
+          npm -v
+
+      # Using a different Shell
+      ## showing runner procesor type with python shell
+      - name: Python command
+        run: |
+          import platform
+          print(platform.processor())
+        shell: python
+
+      - name: Run a command that sets an output with name version
+        id: do-stuff
+        run: |
+          echo "version=zaraza" >> $GITHUB_OUTPUT
+
+      - name: Use output from above command
+        run: |
+          echo '${{ steps.do-stuff.outputs.version }}'
+
+  # This is a parallel job
+  run-windows-command:
+    runs-on: windows-latest
+    # Running a powershell command in windows
+    ## in windows default bash is powershell
+    ## showing current folder context
+    steps:
+      - name: Directory Powershell
+        run: Get-Location
+
+      ## running a step using a different shell: bash
+      - name: Directory Bash
+        run: pwd
+        shell: bash
+
+      - name: Run a command that sets an output with name version
+        id: do-stuff
+        run: |
+          $version="zaraza"
+          echo "version=$version" >> $GITHUB_OUTPUT
+
+      - name: Use output from above command
+        run: |
+          echo '${{ steps.do-stuff.outputs.version }}'
