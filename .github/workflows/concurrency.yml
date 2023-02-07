@@ -15,3 +15,4 @@ jobs:
     steps:
       - run: start-sleep -seconds 150
       - run: echo "hello"
+      - run: echo "test"
