@@ -1,0 +1,52 @@
+# This is a basic workflow to help you get started with Actions
+# The workflow gets an input runtime parameter nameToGreet
+## Steps invoke a free public action from gallery https://github.com/actions and points to:
+# in the first job we call the action to a specific release (v1)
+# in the second job we call the action to a master branch
+# in the third job we call the action to a specific commit
+
+name: Simple Actions Workflow
+on:
+  workflow_dispatch:
+    inputs:
+          nameToGreet:
+            description: 'Name to say hello'
+            required: true
+            default: 'Sean'
+jobs:
+  run-github-actions-from-release:
+    runs-on: ubuntu-latest
+    steps:
+      # this step passes a parameter to the actions (as per the action definition) and defines a step id
+      - name: Simple JavasScript action
+        id: greet
+        uses: actions/hello-world-javascript-action@v1
+        with:
+          who-to-greet: '${{ github.event.inputs.nameToGreet }}'
+      # this step uses the result of the previous step by using the steps collection and id
+      - name: Log Greeting Time
+        run: echo "${{ steps.greet.outputs.time }}"
+
+  run-github-actions-from-master:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Simple JavasScript action
+        id: greet
+        uses: actions/hello-world-javascript-action@v1
+        with:
+          who-to-greet: '${{ github.event.inputs.nameToGreet }}'
+
+      - name: Log Greeting Time
+        run: echo "${{ steps.greet.outputs.time }}"
+
+  run-github-actions-from-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Simple JavasScript action
+        id: greet
+        uses: actions/hello-world-javascript-action@v1
+        with:
+          who-to-greet: '${{ github.event.inputs.nameToGreet }}'
+
+      - name: Log Greeting Time
+        run: echo "${{ steps.greet.outputs.time }}"
