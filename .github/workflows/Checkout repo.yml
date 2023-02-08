@@ -1,0 +1,46 @@
+name: CheckOut Repo
+# By default the repo's files are not downloaded to the server.
+# In the example job we are using a public action @checkout to download and list the files (recommended) https://github.com/marketplace/actions/checkout
+# Also we add an example job to do the same but manually
+# Additionally, just for demo we are also printing environment variables of the resulting operation
+# Refer: https://docs.github.com/en/enterprise-cloud@latest/actions/learn-github-actions/environment-variables#default-environment-variables
+on:
+  workflow_dispatch:
+
+jobs:
+  run-checkout-action-and-list:
+    runs-on: windows-latest
+    steps:
+      # this checks out the commit that triggered the workflow
+      - name: Check out repo
+        uses: actions/checkout@v1
+
+      - name: Directory Powershell
+        run: Get-ChildItem
+
+      - name: Show environment data resulted
+        run: |
+          write-output "Hello World"
+          write-output ${{github.event.repository.name}}
+          write-output ${{github.sha}}
+          write-output ${{github.ref}}
+          write-output ${{github.token}}
+
+
+  run-checkout-manually-and-list:
+    runs-on: ubuntu-latest
+    steps:
+      - name: clone repo manually
+        run: |
+          git clone "https://$GITHUB_ACTOR:${{secrets.GITHUB_TOKEN}}@github.com/$GITHUB_REPOSITORY.git"
+
+      - name: Directory list
+        shell: bash
+        run: |
+          pwd
+          ls -a
+
+      - name: Show environment data resulted
+        run: |
+          echo "{$GITHUB_ACTOR}"
+          echo "{$GITHUB_REPOSITORY}"
